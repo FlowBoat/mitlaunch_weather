@@ -1,9 +1,0 @@
-{
-    "io": {
-        "filename": "data.txt"
-    },
-    "algo": {
-        "deviations": 3.4,
-        "maxcycles": 5
-    }
-}
