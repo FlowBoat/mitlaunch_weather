@@ -1,3 +1,3 @@
 # mitlaunch_weather
 
-Code for the MIT LaunchX Waterloo Pocket Weather Stations team.
+Machine learning code for the MIT LaunchX Waterloo Pocket Weather Stations team.
