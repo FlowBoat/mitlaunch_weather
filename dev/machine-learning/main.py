@@ -1,49 +1,34 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
+from keras.models import Sequential
+from keras.layers import *
+from keras import *
 
-from torch.autograd import Variable
+from data_converter import convert
 
-import random
+import sys, json
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.fc1 = nn.Linear(2, 1)
+TRAIN = 0
+TEST = 1
 
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        return x
+ARGS = sys.argv[1:]
 
-    def num_flat_features(self, x):
-        size = x.size()[1:]
-        num_features = 1
-        for s in size:
-            num_features *= s
-        return num_features
+def main():
+    model = build_model()
+    for data_point in get_data():
+        argument = convert(data_point)
+        if data_point.mode == TRAIN:
+            run_training_iteration(model, data_point)
+        else:
+            run_test_iteration(model, data_point)
 
-net = Net()
-params = list(net.parameters())
+def build_model():
+    model = Sequential()
+    # TODO: Add layers
+    return model
 
-criterion = nn.MSELoss()
-optimizer = optim.SGD(net.parameters(), lr = 0.01)
-
-def learn(inp, target):
-    out = net(var)
-    out.backward(target)
-    criterion = nn.MSELoss()
-    loss = criterion(out, target)
-    net.zero_grad()
-    loss.backward()
-    optimizer.zero_grad()
-    optimizer.step()
-
-for _ in range(1000):
-    num = random.random() * 100
-    var = Variable(torch.Tensor([[[[num, num], [num, num]]]]))
-    target = Variable(torch.Tensor([num]))
-    learn(var, target)
-    print(float(out))
-
-print(net(Variable(torch.Tensor([[[[50, 50], [50, 50]]]]))))
+def get_data():
+    if "--data" in ARGS:
+        filename = ARGS[ARGS.index("--data") + 1]
+    else:
+        filename = "data.json"
+    with open(filename, "r") as f:
+        return json.loads(f.read())
